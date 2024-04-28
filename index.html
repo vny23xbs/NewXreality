@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>3D Bar Chart with Larger Text and Centered Bars - A-Frame & D3.js</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <!-- Camera with Look Controls for navigation -->
+        <a-entity camera look-controls wasd-controls position="0 2 10"></a-entity>
+
+        <!-- Lighting for proper visibility -->
+        <a-light type="ambient" color="#fff"></a-light>
+        <a-light type="directional" color="#fff" position="-1 2 3"></a-light>
+
+        <!-- Bar Chart Container -->
+        <a-entity id="bar-chart" position="0 0 0"></a-entity>
+    </a-scene>
+
+    <script>
+        const data = [
+            { category: "Category A", value: 10.123 },
+            { category: "Category B", value: 12.456 },
+            { category: "Category C", value: 8.789 },
+            { category: "Category D", value: 11.234 },
+            { category: "Category E", value: 14.567 },
+            { category: "Category F", value: 9.876 },
+            { category: "Category G", value: 13.210 },
+            { category: "Category H", value: 7.654 },
+            { category: "Category I", value: 6.789 },
+            { category: "Category J", value: 15.432 }
+        ];
+
+        const barWidth = 0.5;  
+        const barSpacing = 0.5; 
+        const heightScale = 0.3; 
+        const textFontSize = 3; 
+
+        const totalBars = data.length;
+        const chartWidth = totalBars * (barWidth + barSpacing);
+        const centerOffset = (chartWidth - barSpacing) / 2;
+
+        const chartContainer = document.getElementById("bar-chart");
+
+        data.forEach((d, index) => {
+            const barHeight = d.value * heightScale;
+
+            const bar = document.createElement("a-box");
+            bar.setAttribute("color", "#700267"); 
+            bar.setAttribute("depth", barWidth);  
+            bar.setAttribute("width", barWidth);  
+            bar.setAttribute("height", barHeight); 
+            bar.setAttribute("position", `${index * (barWidth + barSpacing) - centerOffset} ${barHeight / 2} 0`); 
+
+            const valueLabel = document.createElement("a-entity");
+            valueLabel.setAttribute("text", {
+                value: `${d.value.toFixed(3)}`, 
+                align: "center",
+                color: "#000", 
+                baseline: "bottom",
+                fontSize: textFontSize,
+                wrapCount: 10 
+            });
+            valueLabel.setAttribute("position", `${index * (barWidth + barSpacing) - centerOffset} ${barHeight + 0.5} 0`); 
+
+            const xAxisLabel = document.createElement("a-entity");
+            xAxisLabel.setAttribute("text", {
+                value: d.category, 
+                align: "center",
+                color: "#000", 
+                baseline: "center",
+                fontSize: textFontSize,
+                wrapCount: 10
+            });
+            xAxisLabel.setAttribute("position", `${index * (barWidth + barSpacing) - centerOffset} -0.5 0`); 
+
+            chartContainer.appendChild(bar);
+            chartContainer.appendChild(valueLabel);
+            chartContainer.appendChild(xAxisLabel);
+        });
+    </script>
+</body>
+</html>
